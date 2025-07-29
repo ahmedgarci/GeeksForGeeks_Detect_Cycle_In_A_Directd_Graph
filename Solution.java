@@ -2,29 +2,32 @@ class Solution {
     public boolean isCyclic(int V, int[][] edges) {
         ArrayList<ArrayList<Integer>> adjList = convert(edges,V);
         boolean[] visited = new boolean[V];
-        for(int i=0; i< V ; i++){
-            if(!visited[i] && DFS(i,adjList,visited,new ArrayList<>())){
+        boolean[] path = new boolean[V];
+        for(int i=0;i < V ; i++){
+            if(!visited[i] && DFS(i,adjList,visited,path)){
                 return true;
             }
         }
         return false;
     }
     
-    public boolean DFS(int v ,  ArrayList<ArrayList<Integer>> adjList,
-    boolean[] visited,ArrayList<Integer> path){
-        visited[v] = true;
-        path.add(v);
-        for(int neighbor : adjList.get(v)){
-            if(!visited[neighbor] && DFS(neighbor,adjList,visited,path)){
-                return true;
-            }else if (path.contains(neighbor)) {
+    public boolean DFS(int node ,ArrayList<ArrayList<Integer>> adjList,
+    boolean[] visited,boolean[] path){
+        if(path[node]){return true;}
+        if(visited[node]){return false;}
+        
+        visited[node] = true;
+        path[node]=true;
+        
+        for(Integer adj : adjList.get(node)){
+            if(DFS(adj,adjList,visited,path)){
                 return true;
             }
         }
-        path.remove(path.size()-1);
+        path[node]=false;
         return false;
+        
     }
-    
     
     public ArrayList<ArrayList<Integer>> convert(int[][] edges,int V){
         ArrayList<ArrayList<Integer>>result = new ArrayList<>();
